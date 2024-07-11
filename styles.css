@@ -109,6 +109,26 @@ section {
     transform: scale(1.05);
 }
 
+.skills-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.skill {
+    background: #f4f4f4;
+    padding: 1rem;
+    width: calc(33% - 2rem);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.skill:hover {
+    transform: scale(1.05);
+}
+
 form {
     display: flex;
     flex-direction: column;
