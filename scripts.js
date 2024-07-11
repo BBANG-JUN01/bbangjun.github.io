@@ -1,180 +1,164 @@
-/* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background-color: white;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('nav ul li a');
+    const headerHeight = document.querySelector('header').offsetHeight;
 
-header {
-    background: #333;
-    color: white;
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-}
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        });
+    });
 
-header nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 2rem;
-}
+    const typingElement = document.getElementById('typing');
+    const text = "포트폴리오에 오신 것을 환영합니다";
+    let index = 0;
 
-header nav ul {
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-}
+    function type() {
+        if (index < text.length) {
+            typingElement.innerHTML += text.charAt(index) === ' ' ? '&nbsp;' : text.charAt(index);
+            index++;
+            setTimeout(type, 100); // 타이핑 속도 조절
+        } else {
+            setTimeout(() => {
+                setTimeout(() => {
+                    typingElement.innerHTML = '';
+                    index = 0;
+                    setTimeout(type, 100); // 반복 시작 전 대기 시간
+                }, 1000); // 타이핑 완료 후 대기 시간
+            }, 1000);
+        }
+    }
 
-header nav ul li a {
-    color: white;
-    text-decoration: none;
-}
+    type();
 
-#hero {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    text-align: center;
-    background-color: white;
-    overflow: hidden;
-}
+    const canvas = document.getElementById('balloonsCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-.hero-content {
-    position: relative;
-    z-index: 2;
-}
+    let fireworks = [];
 
-#typing-container {
-    height: 3rem; /* 고정된 높이 설정 */
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    function createFirework() {
+        const startX = Math.random() * canvas.width;
+        const startY = Math.random() * canvas.height;
+        const targetX = Math.random() * canvas.width;
+        const targetY = Math.random() * canvas.height / 2;
+        const firework = {
+            x: startX,
+            y: startY,
+            targetX: targetX,
+            targetY: targetY,
+            speed: 2 + Math.random() * 3,
+            particles: []
+        };
 
-#typing {
-    font-size: 2.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-}
+        for (let i = 0; i < 100; i++) {
+            firework.particles.push({
+                x: firework.x,
+                y: firework.y,
+                angle: Math.random() * Math.PI * 2,
+                speed: Math.random() * 6,
+                radius: Math.random() * 3 + 1,
+                color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
+            });
+        }
 
-.caret {
-    border-right: 2px solid black;
-    animation: blink-caret 0.75s step-end infinite;
-}
+        fireworks.push(firework);
+    }
 
-@keyframes blink-caret {
-    from, to { border-color: transparent; }
-    50% { border-color: black; }
-}
+    function updateFireworks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-#balloonsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
+        for (let i = 0; i < fireworks.length; i++) {
+            const firework = fireworks[i];
+            firework.y -= firework.speed;
 
-section {
-    padding: 2rem;
-    text-align: center;
-}
+            if (firework.y <= firework.targetY) {
+                for (let j = 0; j < firework.particles.length; j++) {
+                    const particle = firework.particles[j];
+                    particle.x += Math.cos(particle.angle) * particle.speed;
+                    particle.y += Math.sin(particle.angle) * particle.speed;
+                    particle.speed *= 0.98;
+                    particle.radius *= 0.98;
 
-.project-container {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = particle.color;
+                    ctx.fill();
+                }
 
-.project-card {
-    background: #f4f4f4;
-    width: calc(33% - 2rem);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.6s;
-    perspective: 1000px;
-    cursor: pointer;
-    position: relative;
-    transform-style: preserve-3d; /* 카드의 자식 요소들이 3D 공간에서 회전하도록 설정 */
-}
+                if (firework.particles.every(p => p.radius < 0.5)) {
+                    fireworks.splice(i, 1);
+                    i--;
+                }
+            } else {
+                ctx.beginPath();
+                ctx.arc(firework.x, firework.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+            }
+        }
+    }
 
-.project-card .card-front,
-.project-card .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 5px;
-    padding: 1rem;
-    box-sizing: border-box;
-    transform-style: preserve-3d; /* 카드의 내용도 3D 공간에서 회전하도록 설정 */
-    background: #f4f4f4; /* 텍스트 부분 배경색 추가 */
-}
+    function animate() {
+        updateFireworks();
+        requestAnimationFrame(animate);
+    }
 
-.project-card .card-front {
-    background: #f4f4f4;
-    z-index: 2;
-}
+    // 처음 접속 시 고정된 위치에서 폭죽 터트리기
+    function initialFireworks() {
+        for (let i = 0; i < 3; i++) {
+            const firework = {
+                x: canvas.width / 2,
+                y: canvas.height,
+                targetX: Math.random() * canvas.width,
+                targetY: Math.random() * canvas.height / 2,
+                speed: 2 + Math.random() * 3,
+                particles: []
+            };
 
-.project-card .card-back {
-    background: #333;
-    color: white;
-    transform: rotateY(180deg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-}
+            for (let j = 0; j < 100; j++) {
+                firework.particles.push({
+                    x: firework.x,
+                    y: firework.y,
+                    angle: Math.random() * Math.PI * 2,
+                    speed: Math.random() * 6,
+                    radius: Math.random() * 3 + 1,
+                    color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
+                });
+            }
 
-.project-card.flipped .card-front {
-    transform: rotateY(180deg);
-}
+            fireworks.push(firework);
+        }
+    }
 
-.project-card.flipped .card-back {
-    transform: rotateY(0deg);
-}
+    initialFireworks();
 
-.skills-container {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+    // 반복 주기 조정 및 폭죽 생성
+    function randomInterval() {
+        createFirework();
+        setTimeout(randomInterval, Math.random() * 2000 + 1000); // 1초에서 3초 사이의 랜덤 주기
+    }
 
-.skill {
-    background: #f4f4f4;
-    padding: 1rem;
-    width: calc(33% - 2rem);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-    text-align: center;
-}
+    setTimeout(randomInterval, 2000); // 초기 폭죽 후 반복 주기 설정
+    animate();
 
-.skill:hover {
-    transform: scale(1.05);
-}
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-footer {
-    background: #333;
-    color: white;
-    padding: 1rem 0;
-    text-align: center;
-}
+    // 프로젝트 카드 클릭 시 뒤집히는 기능 추가
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+    });
+});
