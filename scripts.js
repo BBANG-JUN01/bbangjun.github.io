@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             x: Math.random() * canvas.width,
             y: canvas.height + 100,
             r: 20 + Math.random() * 30,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            color: `hsla(${Math.random() * 360}, 100%, 50%, 0.6)`, // 알파값 0.6으로 설정
             speed: 1 + Math.random() * 3
         };
         balloons.push(balloon);
