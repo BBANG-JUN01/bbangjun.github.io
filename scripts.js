@@ -43,43 +43,73 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const balloons = [];
+    let fireworks = [];
 
-    function createBalloon() {
-        const balloon = {
+    function createFirework() {
+        const firework = {
             x: Math.random() * canvas.width,
-            y: canvas.height + 100,
-            r: 20 + Math.random() * 30,
-            color: `hsla(${Math.random() * 360}, 100%, 50%, 0.6)`, // 알파값 0.6으로 설정
-            speed: 1 + Math.random() * 3
+            y: canvas.height,
+            targetY: Math.random() * canvas.height / 2,
+            speed: 2 + Math.random() * 3,
+            particles: []
         };
-        balloons.push(balloon);
+
+        for (let i = 0; i < 50; i++) {
+            firework.particles.push({
+                x: firework.x,
+                y: firework.y,
+                angle: Math.random() * Math.PI * 2,
+                speed: Math.random() * 5,
+                radius: Math.random() * 2,
+                color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
+            });
+        }
+
+        fireworks.push(firework);
     }
 
-    function updateBalloons() {
+    function updateFireworks() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < balloons.length; i++) {
-            const b = balloons[i];
-            b.y -= b.speed;
-            if (b.y + b.r < 0) {
-                balloons.splice(i, 1);
-                i--;
+
+        for (let i = 0; i < fireworks.length; i++) {
+            const firework = fireworks[i];
+            firework.y -= firework.speed;
+
+            if (firework.y <= firework.targetY) {
+                for (let j = 0; j < firework.particles.length; j++) {
+                    const particle = firework.particles[j];
+                    particle.x += Math.cos(particle.angle) * particle.speed;
+                    particle.y += Math.sin(particle.angle) * particle.speed;
+                    particle.speed *= 0.95;
+                    particle.radius *= 0.95;
+
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = particle.color;
+                    ctx.fill();
+                }
+
+                if (firework.particles.every(p => p.radius < 0.5)) {
+                    fireworks.splice(i, 1);
+                    i--;
+                }
+            } else {
+                ctx.beginPath();
+                ctx.arc(firework.x, firework.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
             }
-            ctx.beginPath();
-            ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-            ctx.fillStyle = b.color;
-            ctx.fill();
         }
     }
 
     function animate() {
-        updateBalloons();
+        updateFireworks();
         requestAnimationFrame(animate);
     }
 
-    setInterval(createBalloon, 500);
+    setInterval(createFirework, 2000); // 폭죽 생성 간격을 2초로 설정
     animate();
-    
+
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
