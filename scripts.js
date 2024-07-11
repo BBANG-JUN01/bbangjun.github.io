@@ -46,11 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let fireworks = [];
 
     function createFirework() {
+        const startX = Math.random() * canvas.width;
+        const startY = Math.random() * canvas.height;
+        const targetX = Math.random() * canvas.width;
+        const targetY = Math.random() * canvas.height / 2;
         const firework = {
-            x: Math.random() * canvas.width,
-            y: canvas.height,
-            targetY: Math.random() * canvas.height / 2,
-            speed: 3 + Math.random() * 3,
+            x: startX,
+            y: startY,
+            targetX: targetX,
+            targetY: targetY,
+            speed: 2 + Math.random() * 3,
             particles: []
         };
 
