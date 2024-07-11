@@ -75,7 +75,7 @@ header nav ul li a {
     50% { border-color: black; }
 }
 
-#animation-canvas {
+#balloonsCanvas {
     position: absolute;
     top: 0;
     left: 0;
