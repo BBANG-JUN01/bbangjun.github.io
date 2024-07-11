@@ -27,10 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(type, 100); // 타이핑 속도 조절
         } else {
             setTimeout(() => {
-                typingElement.innerHTML = '';
-                index = 0;
-                setTimeout(type, 100); // 반복 시작 전 대기 시간
-            }, 1000); // 타이핑 완료 후 대기 시간
+                setTimeout(() => {
+                    typingElement.innerHTML = '';
+                    index = 0;
+                    setTimeout(type, 100); // 반복 시작 전 대기 시간
+                }, 1000); // 타이핑 완료 후 대기 시간
+            }, 1000);
         }
     }
 
