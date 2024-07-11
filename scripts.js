@@ -38,61 +38,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     type();
 
-    const canvas = document.getElementById('animation-canvas');
+    const canvas = document.getElementById('balloonsCanvas');
     const ctx = canvas.getContext('2d');
-    let particlesArray = [];
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
+    const balloons = [];
 
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 5 + 1;
-            this.speedX = Math.random() * 3 - 1.5;
-            this.speedY = Math.random() * 3 - 1.5;
-        }
+    function createBalloon() {
+        const balloon = {
+            x: Math.random() * canvas.width,
+            y: canvas.height + 100,
+            r: 20 + Math.random() * 30,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            speed: 1 + Math.random() * 3
+        };
+        balloons.push(balloon);
+    }
 
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.size > 0.2) this.size -= 0.1;
-        }
-
-        draw() {
-            ctx.fillStyle = 'rgba(255, 182, 193, 0.8)';
+    function updateBalloons() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < balloons.length; i++) {
+            const b = balloons[i];
+            b.y -= b.speed;
+            if (b.y + b.r < 0) {
+                balloons.splice(i, 1);
+                i--;
+            }
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.closePath();
+            ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+            ctx.fillStyle = b.color;
             ctx.fill();
         }
     }
 
-    function init() {
-        particlesArray = [];
-        for (let i = 0; i < 100; i++) {
-            particlesArray.push(new Particle());
-        }
-    }
-
     function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (let i = 0; i < particlesArray.length; i++) {
-            particlesArray[i].update();
-            particlesArray[i].draw();
-        }
-
+        updateBalloons();
         requestAnimationFrame(animate);
     }
 
-    init();
+    setInterval(createBalloon, 500);
     animate();
+    
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
 });
