@@ -97,16 +97,16 @@ section {
 }
 
 .project-card {
-    background: #f4f4f4;
     width: calc(33% - 2rem);
-    height: 250px; /* 카드 높이 설정 */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.6s;
     perspective: 1000px;
-    cursor: pointer;
+}
+
+.card-inner {
     position: relative;
-    transform-style: preserve-3d; /* 카드의 자식 요소들이 3D 공간에서 회전하도록 설정 */
-    overflow: hidden; /* 카드 내부의 콘텐츠가 넘치지 않도록 설정 */
+    width: 100%;
+    height: 250px; /* 카드 높이 설정 */
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
 }
 
 .project-card .card-front,
@@ -118,35 +118,24 @@ section {
     border-radius: 5px;
     padding: 1rem;
     box-sizing: border-box;
-    transform-style: preserve-3d; /* 카드의 내용도 3D 공간에서 회전하도록 설정 */
-}
-
-.project-card .card-front {
-    background: #f4f4f4;
-    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.project-card .card-front {
+    background: #f4f4f4;
 }
 
 .project-card .card-back {
     background: #333;
     color: white;
     transform: rotateY(180deg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
 }
 
-.project-card.flipped .card-front {
+.project-card.flipped .card-inner {
     transform: rotateY(180deg);
-}
-
-.project-card.flipped .card-back {
-    transform: rotateY(0deg);
 }
 
 .skills-container {
