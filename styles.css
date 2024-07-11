@@ -104,7 +104,7 @@ section {
     perspective: 1000px;
     cursor: pointer;
     position: relative;
-    transform-style: preserve-3d;
+    transform-style: preserve-3d; /* 카드의 자식 요소들이 3D 공간에서 회전하도록 설정 */
 }
 
 .project-card .card-front,
@@ -116,6 +116,7 @@ section {
     border-radius: 5px;
     padding: 1rem;
     box-sizing: border-box;
+    transform-style: preserve-3d; /* 카드의 내용도 3D 공간에서 회전하도록 설정 */
 }
 
 .project-card .card-front {
