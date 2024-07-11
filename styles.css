@@ -99,6 +99,11 @@ section {
 .project-card {
     width: calc(33% - 2rem);
     perspective: 1000px;
+    transition: transform 0.3s ease-in-out; /* 강조 효과를 위한 전환 */
+}
+
+.project-card:hover {
+    transform: scale(1.05); /* 마우스 가져갔을 때 강조 효과 */
 }
 
 .card-inner {
