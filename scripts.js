@@ -1,3 +1,4 @@
+// scripts.js
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav ul li a');
     const headerHeight = document.querySelector('header').offsetHeight;
