@@ -50,17 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
             x: Math.random() * canvas.width,
             y: canvas.height,
             targetY: Math.random() * canvas.height / 2,
-            speed: 2 + Math.random() * 3,
+            speed: 3 + Math.random() * 3,
             particles: []
         };
 
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 100; i++) {
             firework.particles.push({
                 x: firework.x,
                 y: firework.y,
                 angle: Math.random() * Math.PI * 2,
-                speed: Math.random() * 5,
-                radius: Math.random() * 2,
+                speed: Math.random() * 6,
+                radius: Math.random() * 3 + 1,
                 color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
             });
         }
@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const particle = firework.particles[j];
                     particle.x += Math.cos(particle.angle) * particle.speed;
                     particle.y += Math.sin(particle.angle) * particle.speed;
-                    particle.speed *= 0.95;
-                    particle.radius *= 0.95;
+                    particle.speed *= 0.98;
+                    particle.radius *= 0.98;
 
                     ctx.beginPath();
                     ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animate);
     }
 
-    setInterval(createFirework, 2000); // 폭죽 생성 간격을 2초로 설정
+    setInterval(createFirework, 1500); // 폭죽 생성 간격을 1.5초로 설정
     animate();
 
     window.addEventListener('resize', () => {
