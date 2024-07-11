@@ -144,10 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 반복 주기 조정 및 폭죽 생성
     function randomInterval() {
         createFirework();
-        setTimeout(randomInterval, Math.random() * 2000 + 1000); // 1초에서 3초 사이의 랜덤 주기
+        setTimeout(randomInterval, Math.random() * 1000 + 500); // 0.5초에서 1.5초 사이의 랜덤 주기
     }
 
-    setTimeout(randomInterval, 2000); // 초기 폭죽 후 반복 주기 설정
+    setTimeout(randomInterval, 1000); // 초기 폭죽 후 반복 주기 설정
     animate();
 
     window.addEventListener('resize', () => {
