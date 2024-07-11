@@ -112,7 +112,42 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animate);
     }
 
-    setInterval(createFirework, 1500); // 폭죽 생성 간격을 1.5초로 설정
+    // 처음 접속 시 고정된 위치에서 폭죽 터트리기
+    function initialFireworks() {
+        for (let i = 0; i < 3; i++) {
+            const firework = {
+                x: canvas.width / 2,
+                y: canvas.height,
+                targetX: Math.random() * canvas.width,
+                targetY: Math.random() * canvas.height / 2,
+                speed: 2 + Math.random() * 3,
+                particles: []
+            };
+
+            for (let j = 0; j < 100; j++) {
+                firework.particles.push({
+                    x: firework.x,
+                    y: firework.y,
+                    angle: Math.random() * Math.PI * 2,
+                    speed: Math.random() * 6,
+                    radius: Math.random() * 3 + 1,
+                    color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
+                });
+            }
+
+            fireworks.push(firework);
+        }
+    }
+
+    initialFireworks();
+
+    // 반복 주기 조정 및 폭죽 생성
+    function randomInterval() {
+        createFirework();
+        setTimeout(randomInterval, Math.random() * 2000 + 1000); // 1초에서 3초 사이의 랜덤 주기
+    }
+
+    setTimeout(randomInterval, 2000); // 초기 폭죽 후 반복 주기 설정
     animate();
 
     window.addEventListener('resize', () => {
