@@ -134,7 +134,7 @@ section {
     transform: rotateY(180deg);
 }
 
-.project-card.flipped .card-inner {
+.project-card .card-inner.flipped {
     transform: rotateY(180deg);
 }
 
