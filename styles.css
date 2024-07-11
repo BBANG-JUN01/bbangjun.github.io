@@ -129,13 +129,28 @@ section {
 }
 
 .project-card .card-back {
-    background: #333;
-    color: white;
+    background: #eee;
+    color: black;
     transform: rotateY(180deg);
 }
 
 .project-card.flipped .card-inner {
     transform: rotateY(180deg);
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
 }
 
 .skills-container {
