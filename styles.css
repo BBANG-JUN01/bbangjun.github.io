@@ -43,6 +43,7 @@ header nav ul li a {
     position: relative;
     text-align: center;
     background-color: white;
+    overflow: hidden;
 }
 
 .hero-content {
