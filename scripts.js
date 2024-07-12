@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressBar = skill.querySelector('.progress');
             const skillLevel = skill.getAttribute('data-skill');
             progressBar.style.width = skillLevel + '%';
+            progressBar.setAttribute('data-skill', skillLevel);
         });
         skill.addEventListener('mouseleave', () => {
             const progressBar = skill.querySelector('.progress');
