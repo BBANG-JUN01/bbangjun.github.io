@@ -1,4 +1,3 @@
-
 // scripts.js
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav ul li a');
@@ -162,6 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             const cardInner = card.querySelector('.card-inner');
             cardInner.classList.toggle('flipped');
+        });
+    });
+
+    // 스킬 호버 시 진행바 애니메이션
+    const skills = document.querySelectorAll('.skill');
+    skills.forEach(skill => {
+        skill.addEventListener('mouseenter', () => {
+            const progressBar = skill.querySelector('.progress');
+            const skillLevel = skill.getAttribute('data-skill');
+            progressBar.style.width = skillLevel + '%';
+        });
+        skill.addEventListener('mouseleave', () => {
+            const progressBar = skill.querySelector('.progress');
+            progressBar.style.width = '0%';
         });
     });
 });
