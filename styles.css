@@ -200,7 +200,7 @@ section {
     position: relative;
 }
 
-.progress::after {
+.progress[data-skill]::after {
     content: attr(data-skill) '%';
     position: absolute;
     right: 10px;
