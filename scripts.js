@@ -1,4 +1,3 @@
-// scripts.js
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav ul li a');
     const headerHeight = document.querySelector('header').offsetHeight;
@@ -47,28 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
-        const startY = Math.random() * canvas.height;
-        const targetX = Math.random() * canvas.width;
+        const startY = canvas.height;
+        const targetX = startX;
         const targetY = Math.random() * canvas.height / 2;
+        const speed = 2 + Math.random() * 3;
         const firework = {
             x: startX,
             y: startY,
             targetX: targetX,
             targetY: targetY,
-            speed: 2 + Math.random() * 3,
+            speed: speed,
+            exploded: false,
             particles: []
         };
-
-        for (let i = 0; i < 100; i++) {
-            firework.particles.push({
-                x: firework.x,
-                y: firework.y,
-                angle: Math.random() * Math.PI * 2,
-                speed: Math.random() * 6,
-                radius: Math.random() * 3 + 1,
-                color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
-            });
-        }
 
         fireworks.push(firework);
     }
@@ -78,9 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < fireworks.length; i++) {
             const firework = fireworks[i];
-            firework.y -= firework.speed;
 
-            if (firework.y <= firework.targetY) {
+            if (!firework.exploded) {
+                firework.y -= firework.speed;
+
+                ctx.beginPath();
+                ctx.arc(firework.x, firework.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+
+                if (firework.y <= firework.targetY) {
+                    firework.exploded = true;
+                    for (let j = 0; j < 100; j++) {
+                        firework.particles.push({
+                            x: firework.x,
+                            y: firework.y,
+                            angle: Math.random() * Math.PI * 2,
+                            speed: Math.random() * 6,
+                            radius: Math.random() * 3 + 1,
+                            color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
+                        });
+                    }
+                }
+            } else {
                 for (let j = 0; j < firework.particles.length; j++) {
                     const particle = firework.particles[j];
                     particle.x += Math.cos(particle.angle) * particle.speed;
@@ -98,11 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     fireworks.splice(i, 1);
                     i--;
                 }
-            } else {
-                ctx.beginPath();
-                ctx.arc(firework.x, firework.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
             }
         }
     }
@@ -115,27 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 처음 접속 시 고정된 위치에서 폭죽 터트리기
     function initialFireworks() {
         for (let i = 0; i < 3; i++) {
-            const firework = {
-                x: canvas.width / 2,
-                y: canvas.height,
-                targetX: Math.random() * canvas.width,
-                targetY: Math.random() * canvas.height / 2,
-                speed: 2 + Math.random() * 3,
-                particles: []
-            };
-
-            for (let j = 0; j < 100; j++) {
-                firework.particles.push({
-                    x: firework.x,
-                    y: firework.y,
-                    angle: Math.random() * Math.PI * 2,
-                    speed: Math.random() * 6,
-                    radius: Math.random() * 3 + 1,
-                    color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
-                });
-            }
-
-            fireworks.push(firework);
+            createFirework();
         }
     }
 
