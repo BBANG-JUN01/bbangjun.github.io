@@ -1,20 +1,22 @@
 /* styles.css */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    background-color: white;
+    background-color: #f4f4f4;
+    color: #333;
 }
 
 header {
-    background: #333;
+    background: #007BFF;
     color: white;
     padding: 1rem 0;
     position: sticky;
     top: 0;
     width: 100%;
     z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 header nav {
@@ -33,6 +35,13 @@ header nav ul {
 header nav ul li a {
     color: white;
     text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+header nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 #hero {
@@ -42,8 +51,10 @@ header nav ul li a {
     align-items: center;
     position: relative;
     text-align: center;
-    background-color: white;
+    background-color: #007BFF;
+    color: white;
     overflow: hidden;
+    padding: 2rem;
 }
 
 .hero-content {
@@ -52,7 +63,7 @@ header nav ul li a {
 }
 
 #typing-container {
-    height: 3rem; /* 고정된 높이 설정 */
+    height: 3rem;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -61,18 +72,19 @@ header nav ul li a {
 
 #typing {
     font-size: 2.5rem;
+    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
 }
 
 .caret {
-    border-right: 2px solid black;
+    border-right: 2px solid white;
     animation: blink-caret 0.75s step-end infinite;
 }
 
 @keyframes blink-caret {
     from, to { border-color: transparent; }
-    50% { border-color: black; }
+    50% { border-color: white; }
 }
 
 #balloonsCanvas {
@@ -85,13 +97,26 @@ header nav ul li a {
 }
 
 section {
-    padding: 2rem;
+    padding: 4rem 2rem;
     text-align: center;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 2rem 0;
+}
+
+section:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #007BFF;
 }
 
 .project-container {
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     flex-wrap: wrap;
     justify-content: center;
 }
@@ -99,17 +124,21 @@ section {
 .project-card {
     width: calc(33% - 2rem);
     perspective: 1000px;
-    transition: transform 0.3s ease-in-out; /* 강조 효과를 위한 전환 */
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
 }
 
 .project-card:hover {
-    transform: scale(1.05); /* 마우스 가져갔을 때 강조 효과 */
+    transform: scale(1.05);
 }
 
 .card-inner {
     position: relative;
     width: 100%;
-    height: 250px; /* 카드 높이 설정 */
+    height: 250px;
     transform-style: preserve-3d;
     transition: transform 0.6s;
 }
@@ -120,22 +149,23 @@ section {
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 1rem;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: #333;
 }
 
 .project-card .card-front {
-    background: #f4f4f4;
+    background: #fff;
 }
 
 .project-card .card-back {
-    background: #eee;
-    color: black;
+    background: #007BFF;
+    color: white;
     transform: rotateY(180deg);
 }
 
@@ -147,32 +177,35 @@ section {
     display: inline-block;
     padding: 10px 20px;
     margin-top: 10px;
-    background-color: #007BFF;
-    color: white;
+    background-color: white;
+    color: #007BFF;
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn:hover {
     background-color: #0056b3;
+    color: white;
 }
 
 .skills-container {
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .skill {
-    background: #f4f4f4;
+    background: #fff;
     padding: 1rem;
     width: calc(33% - 2rem);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
     text-align: center;
-    position: relative; /* 진행바 위치를 위해 추가 */
+    position: relative;
+    border-radius: 10px;
 }
 
 .skill:hover {
@@ -185,11 +218,11 @@ section {
     border-radius: 5px;
     overflow: hidden;
     margin-top: 10px;
-    display: none; /* 기본적으로 숨기기 */
+    display: none;
 }
 
 .skill:hover .progress-bar {
-    display: block; /* 마우스 오버 시 표시 */
+    display: block;
 }
 
 .progress {
@@ -208,4 +241,24 @@ section {
     transform: translateY(-50%);
     color: white;
     font-size: 0.8rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+footer {
+    background: #007BFF;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 2rem;
 }
