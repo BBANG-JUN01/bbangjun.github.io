@@ -149,18 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 스킬 호버 시 진행바 애니메이션
-    const skills = document.querySelectorAll('.skill');
-    skills.forEach(skill => {
-        skill.addEventListener('mouseenter', () => {
-            const progressBar = skill.querySelector('.progress');
-            const skillLevel = skill.getAttribute('data-skill');
-            progressBar.style.width = skillLevel + '%';
-            progressBar.setAttribute('data-skill', skillLevel);
-        });
-        skill.addEventListener('mouseleave', () => {
-            const progressBar = skill.querySelector('.progress');
-            progressBar.style.width = '0%';
-        });
+    // 스킬 바 애니메이션
+    const skillBars = document.querySelectorAll('.skill-bar-level');
+    skillBars.forEach(bar => {
+        const level = bar.getAttribute('data-level');
+        bar.style.width = level + '%';
     });
 });
