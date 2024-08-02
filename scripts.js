@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const startX = Math.random() * canvas.width;
         const startY = canvas.height;
         const endY = Math.random() * canvas.height / 2;
-        const shapes = [4, 6, 8, 12, 30]; // 10갈래 제거, 30갈래 추가
+        const shapes = [4, 6, 8, 12, 30];
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const color = `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
         const firework = {
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const star = {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 10 + 5, // 크기를 키움
+            size: Math.random() * 8 + 2, // 크기를 줄임
             color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
             opacity: Math.random(),
             direction: Math.random() * Math.PI * 2,
@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
+                const particleLength = 40; // 직선 길이 동일하게 설정
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
@@ -95,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: Math.random() * 3 + 2,
                         startLength: 10,
-                        length: 50 + Math.random() * 30, // 크기 랜덤 범위 키움
+                        length: particleLength,
                         color: firework.color
                     });
                 }
