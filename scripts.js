@@ -94,8 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: Math.random() * 3 + 2,
-                        length: 20 + Math.random() * 10,
-                        maxLength: 20 + Math.random() * 10,
+                        startLength: 10,
+                        length: 30 + Math.random() * 10,
+                        maxLength: 30 + Math.random() * 10,
                         color: firework.color
                     });
                 }
@@ -104,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
             firework.particles.forEach(particle => {
                 ctx.beginPath();
                 ctx.moveTo(
-                    particle.x + Math.cos(particle.angle) * (particle.maxLength / 2),
-                    particle.y + Math.sin(particle.angle) * (particle.maxLength / 2)
+                    particle.x + Math.cos(particle.angle) * particle.startLength,
+                    particle.y + Math.sin(particle.angle) * particle.startLength
                 );
                 ctx.lineTo(
                     particle.x + Math.cos(particle.angle) * particle.length,
