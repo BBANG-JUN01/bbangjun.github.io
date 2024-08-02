@@ -43,13 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     let fireworks = [];
-    let sparks = [];
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
         const startY = canvas.height;
         const endY = Math.random() * canvas.height / 2;
-        const shapes = [4, 6, 8, 12, 30];
+        const shapes = [4, 6, 8, 12];
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const color = `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
         const firework = {
@@ -75,13 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
                 const particleLength = 30;
-                const startLength = 30; // 75% 부분부터 시작
+                const startLength = 10;
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
-                        speed: 1, // 속도를 천천히 조정
+                        speed: 1,
                         startLength: startLength,
                         maxLength: startLength + particleLength,
                         length: particleLength,
@@ -102,12 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
                 );
                 ctx.strokeStyle = particle.color;
-                ctx.globalAlpha = particle.opacity; // 투명도 설정
+                ctx.globalAlpha = particle.opacity;
                 ctx.stroke();
                 if (particle.startLength < particle.maxLength) {
                     particle.startLength += particle.speed;
                     particle.length -= particle.speed;
-                    particle.opacity -= 0.01; // 천천히 사라지게 설정
+                    particle.opacity -= 0.01;
                 }
             });
             firework.particles = firework.particles.filter(p => p.length > 0 && p.opacity > 0);
