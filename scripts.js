@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 20;
+                const particleLength = 40;
                 const startLength = 20; // 중앙 부분부터 시작
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
