@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let j = 0; j < firework.particles.length; j++) {
                     const particle = firework.particles[j];
                     particle.x += Math.cos(particle.angle) * particle.speed;
-                    particle.y += Math.sin(particle.angle) * particle.speed;
+                    particle.y += Math.sin(particle.angle) * particle.speed + 0.05; // 중력 효과를 아주 조금만 추가
                     particle.speed *= 0.98;
                     particle.radius *= 0.98;
 
