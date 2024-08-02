@@ -43,79 +43,120 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     let fireworks = [];
+    let stars = [];
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
-        const startY = Math.random() * canvas.height;
+        const startY = canvas.height;
+        const endY = Math.random() * canvas.height / 2;
         const shapes = [4, 6, 8, 10, 12];
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const firework = {
             x: startX,
             y: startY,
+            targetY: endY,
             shape: shape,
-            particles: []
+            particles: [],
+            exploded: false
         };
-
-        for (let i = 0; i < shape; i++) {
-            firework.particles.push({
-                x: firework.x,
-                y: firework.y,
-                angle: (Math.PI * 2 / shape) * i,
-                speed: Math.random() * 3 + 2,
-                radius: 2 + Math.random() * 2,
-                color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`
-            });
-        }
 
         fireworks.push(firework);
     }
 
-    function updateFireworks() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function createStar() {
+        const star = {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 3 + 1,
+            color: `hsla(${Math.random() * 360}, 100%, 50%, ${Math.random()})`,
+            opacity: Math.random(),
+            direction: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.5
+        };
 
-        for (let i = 0; i < fireworks.length; i++) {
-            const firework = fireworks[i];
+        stars.push(star);
+    }
 
-            for (let j = 0; j < firework.particles.length; j++) {
-                const particle = firework.particles[j];
-                particle.x += Math.cos(particle.angle) * particle.speed;
-                particle.y += Math.sin(particle.angle) * particle.speed;
-                particle.speed *= 0.98;
-                particle.radius *= 0.98;
-
+    function drawFirework(firework) {
+        if (!firework.exploded) {
+            firework.y -= 2;
+            ctx.beginPath();
+            ctx.arc(firework.x, firework.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            if (firework.y <= firework.targetY) {
+                firework.exploded = true;
+                for (let i = 0; i < firework.shape; i++) {
+                    firework.particles.push({
+                        x: firework.x,
+                        y: firework.y,
+                        angle: (Math.PI * 2 / firework.shape) * i,
+                        speed: Math.random() * 3 + 2,
+                        length: 20 + Math.random() * 10,
+                        color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`
+                    });
+                }
+            }
+        } else {
+            firework.particles.forEach(particle => {
                 ctx.beginPath();
-                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-                ctx.fillStyle = particle.color;
-                ctx.fill();
-            }
-
-            if (firework.particles.every(p => p.radius < 0.5)) {
-                fireworks.splice(i, 1);
-                i--;
-            }
+                ctx.moveTo(particle.x, particle.y);
+                ctx.lineTo(
+                    particle.x + Math.cos(particle.angle) * particle.length,
+                    particle.y + Math.sin(particle.angle) * particle.length
+                );
+                ctx.strokeStyle = particle.color;
+                ctx.stroke();
+                particle.length *= 0.98;
+            });
+            firework.particles = firework.particles.filter(p => p.length > 0.5);
         }
     }
 
-    function animate() {
-        updateFireworks();
-        requestAnimationFrame(animate);
+    function drawStar(star) {
+        ctx.beginPath();
+        ctx.moveTo(star.x, star.y);
+        ctx.lineTo(star.x + Math.cos(star.direction) * star.size, star.y + Math.sin(star.direction) * star.size);
+        ctx.strokeStyle = star.color;
+        ctx.globalAlpha = star.opacity;
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
     }
 
-    function initialFireworks() {
+    function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        fireworks.forEach((firework, index) => {
+            drawFirework(firework);
+            if (firework.exploded && firework.particles.length === 0) {
+                fireworks.splice(index, 1);
+            }
+        });
+
+        stars.forEach((star, index) => {
+            drawStar(star);
+            star.opacity -= 0.02;
+            if (star.opacity <= 0) {
+                stars.splice(index, 1);
+            }
+        });
+
+        requestAnimationFrame(update);
+    }
+
+    function initialEffects() {
         for (let i = 0; i < 5; i++) {
             createFirework();
         }
+        for (let i = 0; i < 50; i++) {
+            createStar();
+        }
     }
 
-    initialFireworks();
+    initialEffects();
 
-    function randomInterval() {
-        createFirework();
-        setTimeout(randomInterval, Math.random() * 1000 + 500);
-    }
-
-    setTimeout(randomInterval, 1000);
-    animate();
+    setInterval(createFirework, Math.random() * 1000 + 500);
+    setInterval(createStar, 100);
 
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
@@ -135,4 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const level = bar.getAttribute('data-level');
         bar.style.width = level + '%';
     });
+
+    update();
 });
