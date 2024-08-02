@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const star = {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 6 + 3, // 크기를 키움
+            size: Math.random() * 10 + 5, // 크기를 키움
             color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
             opacity: Math.random(),
             direction: Math.random() * Math.PI * 2,
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: Math.random() * 3 + 2,
                         startLength: 10,
-                        length: 20 + Math.random() * 10,
+                        length: 50 + Math.random() * 30, // 크기 랜덤 범위 키움
                         color: firework.color
                     });
                 }
@@ -125,9 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.translate(star.x, star.y);
         ctx.rotate(star.direction);
         ctx.beginPath();
-        ctx.moveTo(0, -star.size);
-        for (let i = 1; i < 5; i++) {
-            ctx.lineTo(Math.cos((i * 2 * Math.PI) / 4) * star.size, Math.sin((i * 2 * Math.PI) / 4) * star.size);
+        ctx.moveTo(0, -star.size / 2);
+        for (let i = 0; i < 4; i++) {
+            ctx.lineTo(Math.cos((Math.PI / 2) * i) * star.size, Math.sin((Math.PI / 2) * i) * star.size);
         }
         ctx.closePath();
         ctx.fillStyle = star.color;
