@@ -125,9 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.translate(star.x, star.y);
         ctx.rotate(star.direction);
         ctx.beginPath();
-        ctx.moveTo(0, -star.size);
-        for (let i = 1; i < 5; i++) {
-            ctx.lineTo(Math.cos((i * 2 * Math.PI) / 5) * star.size, -Math.sin((i * 2 * Math.PI) / 5) * star.size);
+        for (let i = 0; i < 4; i++) {
+            ctx.lineTo(Math.cos((Math.PI / 2) * i) * star.size, Math.sin((Math.PI / 2) * i) * star.size);
         }
         ctx.closePath();
         ctx.fillStyle = star.color;
