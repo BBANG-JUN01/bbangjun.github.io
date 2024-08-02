@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: 1.5,
-                        startLength: 20, // 중간부터 시작
+                        startLength: 10, // 중간부터 시작
                         maxLength: particleLength,
                         color: firework.color
                     });
@@ -140,8 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fill();
         ctx.restore();
 
+        // 반짝이는 효과 주석 처리
         // if (star.blinkCount < star.maxBlink) {
-        //     star.opacity = star.opacity === 1 ? 0 : 1; // 반짝이는 효과
+        //     star.opacity = star.opacity === 1 ? 0 : 1;
         //     star.blinkCount++;
         // }
     }
