@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 1,
             direction: Math.random() * Math.PI * 2,
             speed: Math.random() * 0.5,
-            blinkCount: 0, // 반짝임 횟수 추가
-            maxBlink: Math.random() < 0.2 ? 5 : 1 // 20% 확률로 5번 반짝임
+            blinkCount: 0,
+            maxBlink: Math.random() < 0.2 ? 5 : 1
         };
 
         stars.push(star);
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: 1.5,
-                        startLength: 0,
+                        startLength: 20, // 중간부터 시작
                         maxLength: particleLength,
                         color: firework.color
                     });
@@ -107,20 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
             firework.particles.forEach(particle => {
                 ctx.beginPath();
                 ctx.moveTo(
-                    particle.x,
-                    particle.y
-                );
-                ctx.lineTo(
                     particle.x + Math.cos(particle.angle) * particle.startLength,
                     particle.y + Math.sin(particle.angle) * particle.startLength
+                );
+                ctx.lineTo(
+                    particle.x + Math.cos(particle.angle) * (particle.startLength + particle.length),
+                    particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
                 );
                 ctx.strokeStyle = particle.color;
                 ctx.stroke();
                 if (particle.startLength < particle.maxLength) {
                     particle.startLength += particle.speed;
+                    particle.length -= particle.speed;
                 }
             });
-            firework.particles = firework.particles.filter(p => p.startLength < p.maxLength);
+            firework.particles = firework.particles.filter(p => p.length > 0);
         }
     }
 
@@ -139,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fill();
         ctx.restore();
 
-        if (star.blinkCount < star.maxBlink) {
-            star.opacity = star.opacity === 1 ? 0 : 1; // 반짝이는 효과
-            star.blinkCount++;
-        }
+        // if (star.blinkCount < star.maxBlink) {
+        //     star.opacity = star.opacity === 1 ? 0 : 1; // 반짝이는 효과
+        //     star.blinkCount++;
+        // }
     }
 
     function update() {
