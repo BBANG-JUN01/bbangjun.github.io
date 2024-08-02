@@ -9,7 +9,7 @@ body {
 }
 
 header {
-    background: #4CAF50; /* 부드러운 녹색으로 변경 */
+    background: #4CAF50;
     color: white;
     padding: 1rem 0;
     position: sticky;
@@ -53,11 +53,11 @@ header nav ul li a:hover {
     align-items: center;
     position: relative;
     text-align: center;
-    background-color: #4CAF50; /* 부드러운 녹색으로 변경 */
+    background-color: #4CAF50;
     color: white;
     overflow: hidden;
     padding: 2rem;
-    margin-top: -1px; /* 헤더와 첫 div 사이의 간격 제거 */
+    margin-top: -1px;
 }
 
 .hero-content {
@@ -114,7 +114,7 @@ section:nth-of-type(even) {
 h2 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
-    color: #4CAF50; /* 부드러운 녹색으로 변경 */
+    color: #4CAF50;
 }
 
 .project-container {
@@ -167,7 +167,7 @@ h2 {
 }
 
 .project-card .card-back {
-    background: #4CAF50; /* 부드러운 녹색으로 변경 */
+    background: #4CAF50;
     color: white;
     transform: rotateY(180deg);
 }
@@ -181,7 +181,7 @@ h2 {
     padding: 10px 20px;
     margin-top: 10px;
     background-color: white;
-    color: #4CAF50; /* 부드러운 녹색으로 변경 */
+    color: #4CAF50;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -189,7 +189,7 @@ h2 {
 }
 
 .btn:hover {
-    background-color: #388E3C; /* 더 어두운 녹색으로 변경 */
+    background-color: #388E3C;
     color: white;
 }
 
@@ -221,7 +221,7 @@ h2 {
 
 .skill-bar-level {
     height: 100%;
-    background: #4CAF50; /* 부드러운 녹색으로 변경 */
+    background: #4CAF50;
     width: 0;
     transition: width 0.6s ease;
     display: flex;
@@ -235,4 +235,24 @@ h2 {
 
 .skill-bar-level[data-level]:after {
     content: attr(data-level) '%';
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+footer {
+    background: #4CAF50;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 2rem;
 }
