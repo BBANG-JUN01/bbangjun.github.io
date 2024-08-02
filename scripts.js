@@ -69,11 +69,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const star = {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 8 + 2, // 크기를 줄임
+            size: Math.random() * 8 + 2,
             color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
-            opacity: Math.random(),
+            opacity: 1,
             direction: Math.random() * Math.PI * 2,
-            speed: Math.random() * 0.5
+            speed: Math.random() * 0.5,
+            blinkCount: 0, // 반짝임 횟수 추가
+            maxBlink: Math.random() < 0.2 ? 5 : 1 // 20% 확률로 5번 반짝임
         };
 
         stars.push(star);
@@ -88,15 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 40; // 직선 길이 동일하게 설정
+                const particleLength = 40;
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
-                        speed: Math.random() * 3 + 2,
-                        startLength: 10,
-                        length: particleLength,
+                        speed: 1.5,
+                        startLength: 0,
+                        maxLength: particleLength,
                         color: firework.color
                     });
                 }
@@ -105,19 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
             firework.particles.forEach(particle => {
                 ctx.beginPath();
                 ctx.moveTo(
+                    particle.x,
+                    particle.y
+                );
+                ctx.lineTo(
                     particle.x + Math.cos(particle.angle) * particle.startLength,
                     particle.y + Math.sin(particle.angle) * particle.startLength
                 );
-                ctx.lineTo(
-                    particle.x + Math.cos(particle.angle) * (particle.startLength + particle.length),
-                    particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
-                );
                 ctx.strokeStyle = particle.color;
                 ctx.stroke();
-                particle.startLength += 0.5;
-                particle.length -= 0.5;
+                if (particle.startLength < particle.maxLength) {
+                    particle.startLength += particle.speed;
+                }
             });
-            firework.particles = firework.particles.filter(p => p.length > 0);
+            firework.particles = firework.particles.filter(p => p.startLength < p.maxLength);
         }
     }
 
@@ -135,6 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.globalAlpha = star.opacity;
         ctx.fill();
         ctx.restore();
+
+        if (star.blinkCount < star.maxBlink) {
+            star.opacity = star.opacity === 1 ? 0 : 1; // 반짝이는 효과
+            star.blinkCount++;
+        }
     }
 
     function update() {
@@ -149,8 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         stars.forEach((star, index) => {
             drawStar(star);
-            star.opacity -= 0.02;
-            if (star.opacity <= 0) {
+            if (star.opacity <= 0 && star.blinkCount >= star.maxBlink) {
                 stars.splice(index, 1);
             }
         });
