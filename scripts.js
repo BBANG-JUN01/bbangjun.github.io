@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const endY = Math.random() * canvas.height / 2;
         const shapes = [4, 6, 8, 10, 12];
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const color = `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
         const firework = {
             x: startX,
             y: startY,
@@ -58,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             shape: shape,
             particles: [],
             exploded: false,
-            color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`
+            color: color
         };
 
         fireworks.push(firework);
