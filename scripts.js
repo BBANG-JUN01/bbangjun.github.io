@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const star = {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 3 + 1,
+            size: Math.random() * 6 + 3, // 크기를 키움
             color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
             opacity: Math.random(),
             direction: Math.random() * Math.PI * 2,
@@ -114,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
                 ctx.strokeStyle = particle.color;
                 ctx.stroke();
+                particle.startLength += 0.5;
                 particle.length -= 0.5;
             });
             firework.particles = firework.particles.filter(p => p.length > 0);
