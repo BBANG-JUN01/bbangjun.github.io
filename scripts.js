@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const startX = Math.random() * canvas.width;
         const startY = canvas.height;
         const endY = Math.random() * canvas.height / 2;
-        const shapes = [4, 6, 8, 10, 12];
+        const shapes = [4, 6, 8, 12, 30]; // 10갈래 제거, 30갈래 추가
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const color = `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
         const firework = {
@@ -125,8 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.translate(star.x, star.y);
         ctx.rotate(star.direction);
         ctx.beginPath();
-        for (let i = 0; i < 4; i++) {
-            ctx.lineTo(Math.cos((Math.PI / 2) * i) * star.size, Math.sin((Math.PI / 2) * i) * star.size);
+        ctx.moveTo(0, -star.size);
+        for (let i = 1; i < 5; i++) {
+            ctx.lineTo(Math.cos((i * 2 * Math.PI) / 4) * star.size, Math.sin((i * 2 * Math.PI) / 4) * star.size);
         }
         ctx.closePath();
         ctx.fillStyle = star.color;
