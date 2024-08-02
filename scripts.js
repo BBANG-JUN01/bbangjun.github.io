@@ -74,14 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 40;
-                const startLength = 30; // 중앙보다 조금 더 밖에서 시작
+                const particleLength = 30;
+                const startLength = 30; // 75% 부분부터 시작
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
-                        speed: 1.5,
+                        speed: 1, // 속도를 천천히 조정
                         startLength: startLength,
                         maxLength: startLength + particleLength,
                         length: particleLength,
