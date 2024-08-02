@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const star = {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 8 + 2, // 크기를 키움
+            size: Math.random() * 8 + 2,
             color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
-            opacity: Math.random(),
+            opacity: 1,
             direction: Math.random() * Math.PI * 2,
             speed: Math.random() * 0.5
         };
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 40; // 직선 길이 동일하게 설정
+                const particleLength = 40;
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
@@ -97,7 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         speed: 1.5,
                         startLength: 0,
                         maxLength: particleLength,
-                        color: firework.color
+                        length: particleLength,
+                        color: firework.color,
+                        opacity: 1
                     });
                 }
             }
@@ -105,21 +107,23 @@ document.addEventListener('DOMContentLoaded', () => {
             firework.particles.forEach(particle => {
                 ctx.beginPath();
                 ctx.moveTo(
-                    particle.x,
-                    particle.y
+                    particle.x + Math.cos(particle.angle) * particle.startLength,
+                    particle.y + Math.sin(particle.angle) * particle.startLength
                 );
                 ctx.lineTo(
-                    particle.x + Math.cos(particle.angle) * particle.maxLength,
-                    particle.y + Math.sin(particle.angle) * particle.maxLength
+                    particle.x + Math.cos(particle.angle) * (particle.startLength + particle.length),
+                    particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
                 );
                 ctx.strokeStyle = particle.color;
+                ctx.globalAlpha = particle.opacity; // 투명도 설정
                 ctx.stroke();
-                particle.startLength += particle.speed;
-                if (particle.startLength >= particle.maxLength) {
+                if (particle.startLength < particle.maxLength) {
+                    particle.startLength += particle.speed;
                     particle.length -= particle.speed;
+                    particle.opacity -= 0.02; // 천천히 사라지게 설정
                 }
             });
-            firework.particles = firework.particles.filter(p => p.length > 0);
+            firework.particles = firework.particles.filter(p => p.length > 0 && p.opacity > 0);
         }
     }
 
