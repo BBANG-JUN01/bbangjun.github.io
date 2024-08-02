@@ -57,10 +57,54 @@ document.addEventListener('DOMContentLoaded', () => {
             targetY: targetY,
             speed: speed,
             exploded: false,
-            particles: []
+            particles: [],
+            shape: Math.floor(Math.random() * 5) // 5가지 모양 중 하나 선택
         };
 
         fireworks.push(firework);
+    }
+
+    function drawShape(ctx, x, y, radius, shape) {
+        ctx.beginPath();
+        switch (shape) {
+            case 0: // Circle
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                break;
+            case 1: // Triangle
+                ctx.moveTo(x, y - radius);
+                ctx.lineTo(x + radius, y + radius);
+                ctx.lineTo(x - radius, y + radius);
+                ctx.closePath();
+                break;
+            case 2: // Square
+                ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
+                break;
+            case 3: // Diamond
+                ctx.moveTo(x, y - radius);
+                ctx.lineTo(x + radius, y);
+                ctx.lineTo(x, y + radius);
+                ctx.lineTo(x - radius, y);
+                ctx.closePath();
+                break;
+            case 4: // Star
+                const spikes = 5;
+                const outerRadius = radius;
+                const innerRadius = radius / 2;
+                let rot = Math.PI / 2 * 3;
+                let step = Math.PI / spikes;
+
+                ctx.moveTo(x, y - outerRadius);
+                for (let i = 0; i < spikes; i++) {
+                    ctx.lineTo(x + Math.cos(rot) * outerRadius, y + Math.sin(rot) * outerRadius);
+                    rot += step;
+                    ctx.lineTo(x + Math.cos(rot) * innerRadius, y + Math.sin(rot) * innerRadius);
+                    rot += step;
+                }
+                ctx.lineTo(x, y - outerRadius);
+                ctx.closePath();
+                break;
+        }
+        ctx.fill();
     }
 
     function updateFireworks() {
@@ -98,10 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     particle.speed *= 0.98;
                     particle.radius *= 0.98;
 
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
                     ctx.fillStyle = particle.color;
-                    ctx.fill();
+                    drawShape(ctx, particle.x, particle.y, particle.radius, firework.shape);
                 }
 
                 if (firework.particles.every(p => p.radius < 0.5)) {
