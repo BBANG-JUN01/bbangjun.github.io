@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     let fireworks = [];
+    let stars = [];
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
@@ -64,6 +65,20 @@ document.addEventListener('DOMContentLoaded', () => {
         fireworks.push(firework);
     }
 
+    function createStar() {
+        const star = {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 8 + 2, // 크기를 키움
+            color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
+            opacity: Math.random(),
+            direction: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.5
+        };
+
+        stars.push(star);
+    }
+
     function drawFirework(firework) {
         if (!firework.exploded) {
             firework.y -= 2;
@@ -73,17 +88,15 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 40;
-                const startLength = 20; // 중앙 부분부터 시작
+                const particleLength = 40; // 직선 길이 동일하게 설정
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
                         y: firework.y,
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: 1.5,
-                        startLength: startLength,
-                        maxLength: startLength + particleLength,
-                        length: particleLength,
+                        startLength: 0,
+                        maxLength: particleLength,
                         color: firework.color
                     });
                 }
@@ -92,22 +105,38 @@ document.addEventListener('DOMContentLoaded', () => {
             firework.particles.forEach(particle => {
                 ctx.beginPath();
                 ctx.moveTo(
-                    particle.x + Math.cos(particle.angle) * particle.startLength,
-                    particle.y + Math.sin(particle.angle) * particle.startLength
+                    particle.x,
+                    particle.y
                 );
                 ctx.lineTo(
-                    particle.x + Math.cos(particle.angle) * (particle.startLength + particle.length),
-                    particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
+                    particle.x + Math.cos(particle.angle) * particle.maxLength,
+                    particle.y + Math.sin(particle.angle) * particle.maxLength
                 );
                 ctx.strokeStyle = particle.color;
                 ctx.stroke();
-                if (particle.startLength < particle.maxLength) {
-                    particle.startLength += particle.speed;
+                particle.startLength += particle.speed;
+                if (particle.startLength >= particle.maxLength) {
                     particle.length -= particle.speed;
                 }
             });
             firework.particles = firework.particles.filter(p => p.length > 0);
         }
+    }
+
+    function drawStar(star) {
+        ctx.save();
+        ctx.translate(star.x, star.y);
+        ctx.rotate(star.direction);
+        ctx.beginPath();
+        ctx.moveTo(0, -star.size / 2);
+        for (let i = 0; i < 4; i++) {
+            ctx.lineTo(Math.cos((Math.PI / 2) * i) * star.size, Math.sin((Math.PI / 2) * i) * star.size);
+        }
+        ctx.closePath();
+        ctx.fillStyle = star.color;
+        ctx.globalAlpha = star.opacity;
+        ctx.fill();
+        ctx.restore();
     }
 
     function update() {
@@ -120,6 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        stars.forEach((star, index) => {
+            drawStar(star);
+            star.opacity -= 0.02;
+            if (star.opacity <= 0) {
+                stars.splice(index, 1);
+            }
+        });
+
         requestAnimationFrame(update);
     }
 
@@ -127,11 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 5; i++) {
             createFirework();
         }
+        for (let i = 0; i < 100; i++) {
+            createStar();
+        }
     }
 
     initialEffects();
 
     setInterval(createFirework, Math.random() * 1000 + 500);
+    setInterval(createStar, 50);
 
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
