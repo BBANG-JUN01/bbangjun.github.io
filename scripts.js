@@ -73,8 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 40;
-                const startLength = 10; // 중앙 부분부터 시작
+                const particleLength = 20;
+                const startLength = 20; // 중앙 부분부터 시작
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: 1.5,
                         startLength: startLength,
-                        maxLength: particleLength,
+                        maxLength: particleLength + startLength,
                         color: firework.color
                     });
                 }
