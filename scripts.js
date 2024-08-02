@@ -82,7 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: 1.5,
                         startLength: startLength,
-                        maxLength: particleLength + startLength,
+                        maxLength: startLength + particleLength,
+                        length: particleLength,
                         color: firework.color
                     });
                 }
