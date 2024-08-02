@@ -95,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: Math.random() * 3 + 2,
                         startLength: 10,
-                        length: 30 + Math.random() * 10,
-                        maxLength: 30 + Math.random() * 10,
+                        length: 20 + Math.random() * 10,
                         color: firework.color
                     });
                 }
@@ -109,8 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     particle.y + Math.sin(particle.angle) * particle.startLength
                 );
                 ctx.lineTo(
-                    particle.x + Math.cos(particle.angle) * particle.length,
-                    particle.y + Math.sin(particle.angle) * particle.length
+                    particle.x + Math.cos(particle.angle) * (particle.startLength + particle.length),
+                    particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
                 );
                 ctx.strokeStyle = particle.color;
                 ctx.stroke();
