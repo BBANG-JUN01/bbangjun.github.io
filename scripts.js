@@ -46,65 +46,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
-        const startY = canvas.height;
-        const targetX = startX;
-        const targetY = Math.random() * canvas.height / 2;
-        const speed = 2 + Math.random() * 3;
+        const startY = Math.random() * canvas.height;
+        const shapes = [4, 6, 8, 10, 12];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const firework = {
             x: startX,
             y: startY,
-            targetX: targetX,
-            targetY: targetY,
-            speed: speed,
-            exploded: false,
-            particles: [],
-            shape: Math.floor(Math.random() * 5) // 5가지 모양 중 하나 선택
+            shape: shape,
+            particles: []
         };
 
-        fireworks.push(firework);
-    }
-
-    function drawShape(ctx, x, y, radius, shape) {
-        ctx.beginPath();
-        switch (shape) {
-            case 0: // Circle
-                ctx.arc(x, y, radius, 0, Math.PI * 2);
-                break;
-            case 1: // Triangle
-                ctx.moveTo(x, y - radius);
-                ctx.lineTo(x + radius, y + radius);
-                ctx.lineTo(x - radius, y + radius);
-                ctx.closePath();
-                break;
-            case 2: // Square
-                ctx.rect(x - radius, y - radius, radius * 2, radius * 2);
-                break;
-            case 3: // Diamond
-                ctx.moveTo(x, y - radius);
-                ctx.lineTo(x + radius, y);
-                ctx.lineTo(x, y + radius);
-                ctx.lineTo(x - radius, y);
-                ctx.closePath();
-                break;
-            case 4: // Star
-                const spikes = 5;
-                const outerRadius = radius;
-                const innerRadius = radius / 2;
-                let rot = Math.PI / 2 * 3;
-                let step = Math.PI / spikes;
-
-                ctx.moveTo(x, y - outerRadius);
-                for (let i = 0; i < spikes; i++) {
-                    ctx.lineTo(x + Math.cos(rot) * outerRadius, y + Math.sin(rot) * outerRadius);
-                    rot += step;
-                    ctx.lineTo(x + Math.cos(rot) * innerRadius, y + Math.sin(rot) * innerRadius);
-                    rot += step;
-                }
-                ctx.lineTo(x, y - outerRadius);
-                ctx.closePath();
-                break;
+        for (let i = 0; i < shape; i++) {
+            firework.particles.push({
+                x: firework.x,
+                y: firework.y,
+                angle: (Math.PI * 2 / shape) * i,
+                speed: Math.random() * 3 + 2,
+                radius: 2 + Math.random() * 2,
+                color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`
+            });
         }
-        ctx.fill();
+
+        fireworks.push(firework);
     }
 
     function updateFireworks() {
@@ -113,43 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < fireworks.length; i++) {
             const firework = fireworks[i];
 
-            if (!firework.exploded) {
-                firework.y -= firework.speed;
+            for (let j = 0; j < firework.particles.length; j++) {
+                const particle = firework.particles[j];
+                particle.x += Math.cos(particle.angle) * particle.speed;
+                particle.y += Math.sin(particle.angle) * particle.speed;
+                particle.speed *= 0.98;
+                particle.radius *= 0.98;
 
                 ctx.beginPath();
-                ctx.arc(firework.x, firework.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = '#fff';
+                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
                 ctx.fill();
+            }
 
-                if (firework.y <= firework.targetY) {
-                    firework.exploded = true;
-                    for (let j = 0; j < 100; j++) {
-                        firework.particles.push({
-                            x: firework.x,
-                            y: firework.y,
-                            angle: Math.random() * Math.PI * 2,
-                            speed: Math.random() * 6,
-                            radius: Math.random() * 3 + 1,
-                            color: `hsla(${Math.random() * 360}, 100%, 50%, 0.8)`
-                        });
-                    }
-                }
-            } else {
-                for (let j = 0; j < firework.particles.length; j++) {
-                    const particle = firework.particles[j];
-                    particle.x += Math.cos(particle.angle) * particle.speed;
-                    particle.y += Math.sin(particle.angle) * particle.speed;
-                    particle.speed *= 0.98;
-                    particle.radius *= 0.98;
-
-                    ctx.fillStyle = particle.color;
-                    drawShape(ctx, particle.x, particle.y, particle.radius, firework.shape);
-                }
-
-                if (firework.particles.every(p => p.radius < 0.5)) {
-                    fireworks.splice(i, 1);
-                    i--;
-                }
+            if (firework.particles.every(p => p.radius < 0.5)) {
+                fireworks.splice(i, 1);
+                i--;
             }
         }
     }
@@ -159,22 +101,20 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animate);
     }
 
-    // 처음 접속 시 고정된 위치에서 폭죽 터트리기
     function initialFireworks() {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
             createFirework();
         }
     }
 
     initialFireworks();
 
-    // 반복 주기 조정 및 폭죽 생성
     function randomInterval() {
         createFirework();
-        setTimeout(randomInterval, Math.random() * 1000 + 500); // 0.5초에서 1.5초 사이의 랜덤 주기
+        setTimeout(randomInterval, Math.random() * 1000 + 500);
     }
 
-    setTimeout(randomInterval, 1000); // 초기 폭죽 후 반복 주기 설정
+    setTimeout(randomInterval, 1000);
     animate();
 
     window.addEventListener('resize', () => {
@@ -182,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.height = window.innerHeight;
     });
 
-    // 프로젝트 카드 클릭 시 뒤집히는 기능 추가
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach(card => {
         card.addEventListener('click', () => {
@@ -191,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 스킬 바 애니메이션
     const skillBars = document.querySelectorAll('.skill-bar-level');
     skillBars.forEach(bar => {
         const level = bar.getAttribute('data-level');
