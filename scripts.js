@@ -43,12 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     let fireworks = [];
+    let sparks = [];
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
         const startY = canvas.height;
         const endY = Math.random() * canvas.height / 2;
-        const shapes = [4, 6, 8, 12];
+        const shapes = [4, 6, 8, 12, 30];
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const color = `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
         const firework = {
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
                 const particleLength = 30;
-                const startLength = 10;
+                const startLength = 30;
                 for (let i = 0; i < firework.shape; i++) {
                     firework.particles.push({
                         x: firework.x,
