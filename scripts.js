@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     let fireworks = [];
+    let sparks = [];
 
     function createFirework() {
         const startX = Math.random() * canvas.width;
@@ -64,6 +65,36 @@ document.addEventListener('DOMContentLoaded', () => {
         fireworks.push(firework);
     }
 
+    function createTail() {
+        const tail = {
+            x: Math.random() * canvas.width,
+            y: canvas.height,
+            vx: 0,
+            vy: -Math.random() * 5 - 2,
+            opacity: 1,
+            colorDeg: Math.random() * 360
+        };
+        sparks.push(tail);
+    }
+
+    function createParticles(x, y, colorDeg) {
+        const particleLength = 30;
+        const startLength = 30;
+        for (let i = 0; i < 12; i++) {
+            fireworks.push({
+                x: x,
+                y: y,
+                angle: (Math.PI * 2 / 12) * i,
+                speed: 1,
+                startLength: startLength,
+                maxLength: startLength + particleLength,
+                length: particleLength,
+                color: `hsla(${colorDeg}, 100%, 50%, 1)`,
+                opacity: 1
+            });
+        }
+    }
+
     function drawFirework(firework) {
         if (!firework.exploded) {
             firework.y -= 2;
@@ -73,21 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             if (firework.y <= firework.targetY) {
                 firework.exploded = true;
-                const particleLength = 30;
-                const startLength = 30; // 75% 부분부터 시작
-                for (let i = 0; i < firework.shape; i++) {
-                    firework.particles.push({
-                        x: firework.x,
-                        y: firework.y,
-                        angle: (Math.PI * 2 / firework.shape) * i,
-                        speed: 1, // 속도를 천천히 조정
-                        startLength: startLength,
-                        maxLength: startLength + particleLength,
-                        length: particleLength,
-                        color: firework.color,
-                        opacity: 1
-                    });
-                }
+                createParticles(firework.x, firework.y, Math.random() * 360);
             }
         } else {
             firework.particles.forEach(particle => {
@@ -101,20 +118,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     particle.y + Math.sin(particle.angle) * (particle.startLength + particle.length)
                 );
                 ctx.strokeStyle = particle.color;
-                ctx.globalAlpha = particle.opacity; // 투명도 설정
+                ctx.globalAlpha = particle.opacity;
                 ctx.stroke();
                 if (particle.startLength < particle.maxLength) {
                     particle.startLength += particle.speed;
                     particle.length -= particle.speed;
-                    particle.opacity -= 0.01; // 천천히 사라지게 설정
+                    particle.opacity -= 0.01;
                 }
             });
             firework.particles = firework.particles.filter(p => p.length > 0 && p.opacity > 0);
         }
     }
 
+    function drawSpark(spark) {
+        ctx.beginPath();
+        ctx.arc(spark.x, spark.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${spark.colorDeg}, 100%, 50%, ${spark.opacity})`;
+        ctx.fill();
+        spark.x += spark.vx;
+        spark.y += spark.vy;
+        spark.opacity -= 0.02;
+    }
+
     function update() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        if (Math.random() < 0.03) createTail();
+
+        sparks.forEach((spark, index) => {
+            drawSpark(spark);
+            if (spark.opacity < 0) sparks.splice(index, 1);
+        });
 
         fireworks.forEach((firework, index) => {
             drawFirework(firework);
