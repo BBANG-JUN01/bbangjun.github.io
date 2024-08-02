@@ -57,7 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
             targetY: endY,
             shape: shape,
             particles: [],
-            exploded: false
+            exploded: false,
+            color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`
         };
 
         fireworks.push(firework);
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             size: Math.random() * 3 + 1,
-            color: `hsla(${Math.random() * 360}, 100%, 50%, ${Math.random()})`,
+            color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`,
             opacity: Math.random(),
             direction: Math.random() * Math.PI * 2,
             speed: Math.random() * 0.5
@@ -93,34 +94,44 @@ document.addEventListener('DOMContentLoaded', () => {
                         angle: (Math.PI * 2 / firework.shape) * i,
                         speed: Math.random() * 3 + 2,
                         length: 20 + Math.random() * 10,
-                        color: `hsla(${Math.random() * 360}, 100%, 50%, 1)`
+                        maxLength: 20 + Math.random() * 10,
+                        color: firework.color
                     });
                 }
             }
         } else {
             firework.particles.forEach(particle => {
                 ctx.beginPath();
-                ctx.moveTo(particle.x, particle.y);
+                ctx.moveTo(
+                    particle.x + Math.cos(particle.angle) * (particle.maxLength / 2),
+                    particle.y + Math.sin(particle.angle) * (particle.maxLength / 2)
+                );
                 ctx.lineTo(
                     particle.x + Math.cos(particle.angle) * particle.length,
                     particle.y + Math.sin(particle.angle) * particle.length
                 );
                 ctx.strokeStyle = particle.color;
                 ctx.stroke();
-                particle.length *= 0.98;
+                particle.length -= 0.5;
             });
-            firework.particles = firework.particles.filter(p => p.length > 0.5);
+            firework.particles = firework.particles.filter(p => p.length > 0);
         }
     }
 
     function drawStar(star) {
+        ctx.save();
+        ctx.translate(star.x, star.y);
+        ctx.rotate(star.direction);
         ctx.beginPath();
-        ctx.moveTo(star.x, star.y);
-        ctx.lineTo(star.x + Math.cos(star.direction) * star.size, star.y + Math.sin(star.direction) * star.size);
-        ctx.strokeStyle = star.color;
+        ctx.moveTo(0, -star.size);
+        for (let i = 1; i < 5; i++) {
+            ctx.lineTo(Math.cos((i * 2 * Math.PI) / 5) * star.size, -Math.sin((i * 2 * Math.PI) / 5) * star.size);
+        }
+        ctx.closePath();
+        ctx.fillStyle = star.color;
         ctx.globalAlpha = star.opacity;
-        ctx.stroke();
-        ctx.globalAlpha = 1.0;
+        ctx.fill();
+        ctx.restore();
     }
 
     function update() {
@@ -148,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 5; i++) {
             createFirework();
         }
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 100; i++) {
             createStar();
         }
     }
@@ -156,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initialEffects();
 
     setInterval(createFirework, Math.random() * 1000 + 500);
-    setInterval(createStar, 100);
+    setInterval(createStar, 50);
 
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
